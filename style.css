@@ -1,0 +1,33 @@
+body {
+  background-color: #222;
+}
+h1 {
+  font-size: 300%;
+}
+input, label {
+  width:50%;
+  margin: 10px;
+  font-size: 150%;
+}
+input[type=submit] {
+  padding: 5px;
+  font-size: 120%;
+}
+.box {
+  text-align: center;
+  background-color: #888;
+  border-radius: 1px;
+  border-color: #ccc;
+  border-width: thick;
+  padding: 20px;
+
+  margin: 20px;
+}
+.top {
+  width: 90%;
+  margin-right: 5%;
+  margin-left: 5%;
+  height: 10%;
+  color: #ccc;
+  text-align: center;
+}
