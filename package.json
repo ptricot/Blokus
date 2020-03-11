@@ -1,0 +1,19 @@
+{
+  "name": "Blokus",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "Blokus Duo Online",
+  "main": "app.js",
+  "scripts": {
+    "start": "echo 'Lancement du serveur...' && nodemon app.js"
+  },
+  "author": "Mourtaza Abbasbhay",
+  "dependencies": {
+    "cookie-parser": "^1.4.3",
+    "date-time": "^2.1.0",
+    "ejs": "^2.6.1",
+    "express": "^4.16.4",
+    "nodemon": "^1.19.3",
+    "xss": "^1.0.3"
+  }
+}
