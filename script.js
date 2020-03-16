@@ -27,7 +27,10 @@
     270:[{x:0, y:0},{x:1, y:0},{x:2, y:0}]
   }
 };
+
 var damier = document.getElementById('damier');
+
+// Création du tableau
 
 for (i=0; i<14; i++){
   var tr = document.createElement('TR');
@@ -44,6 +47,8 @@ for (i=0; i<14; i++){
   }
   damier.appendChild(tr);
 }
+
+// Gestion du dépot des pièces sur le plateau - pas encore de passage par le serveur
 
 function drag(event){
   event.dataTransfer.setData("text", event.target.id);
