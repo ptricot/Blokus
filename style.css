@@ -26,7 +26,7 @@ li {
   border-color: black;
   border-width: thin;
 }
-.box, .box-inline, .box-full {
+.box, .box-inline, .box-full, .box-pieces {
   text-align: center;
   background-color: #888;
   border-style: solid;
@@ -39,6 +39,12 @@ li {
 }
 .box-inline {
   width:40%;
+  display: inline-block;
+}
+.box-pieces {
+  width: 15%;
+  height: 536px;
+  overflow-y: scroll;
   display: inline-block;
 }
 .box-full {
@@ -60,4 +66,26 @@ li {
   float:right;
   height: 20px;
   border: none;
+}
+.cell {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #222;
+  background-color: #bbb;
+}
+.cell-purp {
+    width: 30px;
+    height: 30px;
+    border: 2px solid #b4c;
+    background-color: #b4c;
+}
+.cell-oran {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #f90;
+  background-color: #f90;
+}
+.drp-zone {
+  height: 100%;
+  width: 100%;
 }
