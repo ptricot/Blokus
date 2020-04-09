@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Blokus - index</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <div class="top">
+      <img src="img/logo.jpg" alt="">
+    </div>
+    <div class="box">
+      <form class="" action="guest" method="GET">
+        <input type="submit" value="Play as guest">
+      </form>
+    </div>
+    <div class="box-inline" id="login">
+      <form class="" action="login" method="POST">
+        <label for="username">Name</label><br>
+        <input type="text" name="username" value="user"><br>
+        <label for="password">Password</label><br>
+        <input type="text" name="password" value="pass"><br>
+        <input type="submit" value="Log in">
+      </form>
+    </div>
+    <div class="box-inline" id="create">
+      <form class="" action="signup" method="POST">
+        <label for="newUsername">Name</label><br>
+        <input type="text" name="newUsername" value=""><br>
+        <label for="newPassword">Password</label><br>
+        <input type="text" name="newPassword" value=""><br>
+        <label for="confirmPassword">Confirm password</label><br>
+        <input type="text" name="confirmPassword" value=""><br>
+        <input type="submit" value="Create account">
+      </form>
+    </div>
+  </body>
+</html>
