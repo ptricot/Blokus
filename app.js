@@ -9,7 +9,7 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 
 // Port
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 8080
 
 // socket.io
 const http = require('http').createServer(app)
@@ -131,5 +131,5 @@ app.use(function (err, req, res, next) {
 // ------------------
 
 http.listen(PORT, function () {
-  console.log('\nServer started, listening on PORT 3000')
+  console.log(`\nServer started, listening on PORT ${PORT}`)
 })

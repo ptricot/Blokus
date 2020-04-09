@@ -104,6 +104,7 @@ var pieces = [
   new piece(2, [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }], 1, 1),
   new piece(3, [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }], 0, 2)
 ]
+
 var dam = new damier()
 var selected = 0
 
