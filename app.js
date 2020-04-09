@@ -1,5 +1,5 @@
 // --------------
-// -- includes --
+// -- Includes --
 // --------------
 
 const express = require('express')
@@ -7,7 +7,10 @@ const app = express()
 const path = require('path')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
-const io = require('socket.io')()
+
+// socket.io
+const http = require('http').createServer(app)
+const io = require('socket.io')(http)
 
 // cookieParser
 app.use(cookieParser())
@@ -53,25 +56,77 @@ app.get('/users', function (req, res) {
 })
 
 // -----------------
+// -- Socket.io --
+// -----------------
+
+const users = {}
+let rooms = 0
+
+io.on('connection', function (socket) {
+  // connection
+  users.username = socket
+  socket.emit('connection', 'username')
+  console.log('a user connected')
+
+  socket.on('disconnect', function () {
+    socket.emit('deconnection', 'username')
+    console.log('user disconnected')
+  })
+
+  // message
+  socket.on('nouveau message', function (msg) {
+    socket.emit('reponse', msg) // emit : to all - sender included
+    console.log('message: ' + msg)
+  })
+
+  // user 1 send match request to user 2
+  socket.on('envoi defi', function (data) {
+    users[data.user2].emit('nouveau defi', data)
+    console.log(`defi de ${data.user1} pour ${data.user2}`)
+  })
+
+  // user 2 refuse defi
+  socket.on('refus defi', function (data) {
+    users[data.user1].emit('defi refuse', data)
+  })
+
+  // user 2 accepte defi, new game start
+  socket.on('accepte defi', function (data) {
+    // users 1 and 2 join room
+    const room = 'room-' + ++rooms
+    users[data.user1].join(room)
+    users[data.user2].join(room)
+    io.in(data.room).emit('new game', data)
+  })
+
+  // play turn in a room
+  socket.on('play turn', function (data) {
+    io.in(data.room).emit('turn played', {
+      tile: data.tile,
+      room: data.room
+    })
+  })
+})
+
+// -----------------
 // -- HTTP errors --
 // -----------------
 
 // handle 404
-app.use(function (err, req, res, next) {
-  console.log(err)
-  res.status(404).sendFile('error-404.html')
+app.use(function (req, res, next) {
+  res.status(404).sendFile(path.join(__dirname, '/error-404.html'))
 })
 
 // handle 500
 app.use(function (err, req, res, next) {
   console.log(err)
-  res.status(500).sendFile('error-500.html')
+  res.status(500).sendFile(path.join(__dirname, '/error-500.html'))
 })
 
 // ------------------
 // -- Start server --
 // ------------------
 
-app.listen(3000, function () {
+http.listen(3000, function () {
   console.log('\nServer started, listening on PORT 3000')
 })
