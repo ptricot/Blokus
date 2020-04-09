@@ -14,7 +14,7 @@
 
     <div>
       Nouveau message
-      <form method="POST" action="">
+      <form id="chat" method="POST" action="">
         <input id="msg" type="text" placeholder="message"/>
         <button type="submit">Chatter</button>
       </form>
@@ -23,6 +23,10 @@
       Les messages
       </ul>
     </div>
+
+    <form method="GET" action="logout">
+      <button type="submit">Déconnexion</button>
+    </form>
 
     <div class="box-full" id="lobby">
       <p class="p"> Users connected :</p>

@@ -5,7 +5,7 @@ $(function () {
   const socket = io()
 
   // send message
-  $('form').submit(function (e) {
+  $('#chat').submit(function (e) {
     e.preventDefault()
     socket.emit('nouveau message', $('#msg').val())
     $('#msg').val('')

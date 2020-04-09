@@ -3,14 +3,14 @@
 // --------------
 
 const express = require('express')
+const session = require('express-session')
 const app = express()
 const path = require('path')
-const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
+const mysql = require('mysql')
 
 // MySQL
-const mysql = require('mysql')
 const database = mysql.createConnection({
   host: 'localhost',
   user: 'blokus',
@@ -29,9 +29,6 @@ const PORT = process.env.PORT || 8080
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 
-// cookieParser
-app.use(cookieParser())
-
 // bodyParser
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
@@ -39,9 +36,23 @@ app.use(bodyParser.json())
 // set public path
 app.use(express.static('public'))
 
-// login page default
+// -------------
+// -- Session --
+// -------------
+
+// Initialize express-session
+app.use(session({
+  secret: 'secret',
+  resave: false,
+  saveUninitialized: false
+}))
+
 app.get('/', function (req, res) {
-  res.redirect('login.html')
+  if (req.session.user === undefined) {
+    res.redirect('login.html')
+  } else {
+    res.redirect('lobby.html')
+  }
 })
 
 // -------------
@@ -49,9 +60,9 @@ app.get('/', function (req, res) {
 // -------------
 
 app.post('/signup', function (req, res) {
-  const username = mysql.escape(req.body.newUsername)
-  const password = mysql.escape(req.body.newPassword)
-  const confirmPassword = mysql.escape(req.body.confirmPassword)
+  const username = req.body.newUsername
+  const password = req.body.newPassword
+  const confirmPassword = req.body.confirmPassword
   if (username && password && confirmPassword) {
     if (confirmPassword === password) {
       bcrypt.hash(password, 10).then(function (hash) {
@@ -61,15 +72,18 @@ app.post('/signup', function (req, res) {
             res.redirect('/')
           } else {
             console.log('New user created')
-            res.redirect('lobby.html')
+            req.session.user = username
+            res.redirect('/')
           }
         })
       })
     } else {
       console.log('Password ne correspondent pas')
+      res.redirect('/')
     }
   } else {
     console.log('Champs incomplets')
+    res.redirect('/')
   }
 })
 
@@ -77,31 +91,47 @@ app.post('/signup', function (req, res) {
 // -- Login --
 // -----------
 
+// Guest
+let guests = 0
+
 app.get('/login', function (req, res) {
-  console.log(1)
+  req.session.user = 'guest-' + ++guests
+  res.redirect('/')
 })
 
+// Login
 app.post('/login', function (req, res) {
-  const username = mysql.escape(req.body.username)
-  const password = mysql.escape(req.body.password)
+  const username = req.body.username
+  const password = req.body.password
   if (username && password) {
     database.query('SELECT * FROM accounts WHERE username = ?', username, function (error, results) {
       if (error) {
         console.log(error)
+        res.redirect('/')
       } else if (results.length > 0) {
         bcrypt.compare(password, results[0].password).then(function (result) {
           if (result) {
-            console.log('Login successful')
-            res.redirect('lobby.html')
+            req.session.user = username
+            console.log(`Login successful : ${username}`)
+            res.redirect('/')
           }
         })
       } else {
         console.log('Login incorrect')
+        res.redirect('/')
       }
     })
   } else {
     console.log('Login incomplet')
+    res.redirect('/')
   }
+})
+
+// Logout
+app.get('/logout', function (req, res) {
+  console.log(`Logout successful : ${req.session.username}`)
+  req.session.destroy()
+  res.redirect('/')
 })
 
 // -----------
@@ -118,16 +148,21 @@ app.get('/users', function (req, res) {
 // -----------------
 
 const users = {}
-let rooms = 0
+const rooms = []
+let nRooms = 0
 
 io.on('connection', function (socket) {
   // connection
-  users.username = socket
-  socket.emit('connection', 'username')
-  console.log('a user connected')
+  socket.on('new username', function (username) {
+    socket.username = username
+    users[username] = socket
+    socket.emit('connection', username)
+    console.log('a user connected')
+  })
 
   socket.on('disconnect', function () {
-    socket.emit('deconnection', 'username')
+    delete users[socket.username]
+    socket.emit('deconnection', socket.username)
     console.log('user disconnected')
   })
 
@@ -151,7 +186,8 @@ io.on('connection', function (socket) {
   // user 2 accepte defi, new game start
   socket.on('accepte defi', function (data) {
     // users 1 and 2 join room
-    const room = 'room-' + ++rooms
+    const room = 'room-' + ++nRooms
+    rooms.push(room)
     users[data.user1].join(room)
     users[data.user2].join(room)
     io.in(data.room).emit('new game', data)
