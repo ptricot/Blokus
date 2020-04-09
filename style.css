@@ -26,6 +26,12 @@ li {
   border-color: black;
   border-width: thin;
 }
+<<<<<<< HEAD
+=======
+img {
+  display: block;
+}
+>>>>>>> lhamap
 .box, .box-inline, .box-full, .box-pieces {
   text-align: center;
   background-color: #888;
@@ -50,18 +56,65 @@ li {
 .box-full {
   height:100%;
 }
+.but{
+  width: 80%;
+  height: 40px;
+  margin: 10%;
+  margin-bottom: 10%;
+  border: 2px solid black;
+  background-color: #aaa;
+  font-size: 130%;
+}
+.cell {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #222;
+  background-color: #bbb;
+}
+.clicked {
+  border: 2px solid #2c2;
+}
+.cell-purp {
+    width: 30px;
+    height: 30px;
+    border: 2px solid #b4c;
+    background-color: #b4c;
+}
+.cell-oran {
+  width: 30px;
+  height: 30px;
+  border: 2px solid #f90;
+  background-color: #f90;
+}
+.drp-zone {
+  height: 100%;
+  width: 100%;
+}
+.p {
+  padding-left: 10px;
+  text-align: left;
+}
+.piece {
+  margin: auto;
+  margin-top:20px;
+  margin-bottom:20px;
+}
+.piece-cell {
+  padding: 0;
+  height: 31px;
+}
+.piece-row {
+  padding: 0;
+}
 .top {
   width: 90%;
   margin-right: 5%;
   margin-left: 5%;
   height: 10%;
   color: #ccc;
-  text-align: center;
-}
-.p {
-  padding-left: 10px;
   text-align: left;
 }
+<<<<<<< HEAD
 .but {
   float:right;
   height: 20px;
@@ -89,3 +142,5 @@ li {
   height: 100%;
   width: 100%;
 }
+=======
+>>>>>>> lhamap
