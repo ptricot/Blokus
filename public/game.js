@@ -122,6 +122,17 @@ class Damier {
     }
   }
 }
+  color (liste,couleur){
+    if (couleur == "orange") {
+      for (i in liste){
+        this.html.children[liste[i].x].children[liste[i].y].classList.add('cell-oran');
+      }
+    } else {
+      for (i in liste){
+        this.html.children[liste[i].x].children[liste[i].y].classList.add('cell-purp');
+      }
+    }
+  }
 }
 // Pour chaque piece, decrit les cases remplies et cree les pieces
 
@@ -208,9 +219,11 @@ $(document).ready(function ($) {
   });
 });
 
-socket.on('end turn', function (msg) {
-
+socket.on('end turn', function (msg) { // Le serveur renvoie une confirmation (avec les cases a colorer) de ce que le joueur a joue
+  var response = msg.parse();
+  dam.color(response,"orange");
 });
-socket.on('turn played', function (msg) {
-
+socket.on('turn played', function (msg) { // Le serveur envoie ce qu'a joue l'adversaire (avec les cases a colorer)
+  var response = msg.parse();
+  dam.color(response,"purple");
 });
