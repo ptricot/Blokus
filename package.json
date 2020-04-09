@@ -10,6 +10,10 @@
   "author": "Mourtaza Abbasbhay",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+<<<<<<< HEAD
+=======
+    "cookie-parser": "^1.4.5",
+>>>>>>> afb8b0280fb521155ff0629f9ff788c3f44d4b11
     "date-time": "^3.1.0",
     "ejs": "^3.0.2",
     "express": "^4.17.1",

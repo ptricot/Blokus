@@ -86,21 +86,17 @@ class Piece {
     this.fill()
   }
 }
-
 class Damier {
   constructor () {
     this.html = document.getElementById('damier')
-    this.tableau = []
     this.init()
   }
 
   init () {
     for (var i = 0; i < 14; i++) {
-      this.tableau.push([])
       var tr = document.createElement('TR')
       tr.classList.add('row')
       for (var j = 0; j < 14; j++) {
-        this.tableau[i].push(0)
         var td = document.createElement('TD')
         td.classList.add('cell')
         td.dataset.x = i
@@ -110,8 +106,34 @@ class Damier {
       this.html.appendChild(tr)
     }
   }
+  update (tableau) { // 0:vide, 1:orange, 2:violet
+    for (var i in tableau){
+      for (var j in tableau[i]){
+        switch(tableau[i][j]){
+          case 0:
+            break;
+          case 1:
+            this.html.children[i].children[j].classList.add('cell-oran');
+            break;
+          case 2:
+            this.html.children[i].children[j].classList.add('cell-purp');
+            break;
+      }
+    }
+  }
 }
-
+  color (liste,couleur){
+    if (couleur == "orange") {
+      for (i in liste){
+        this.html.children[liste[i].x].children[liste[i].y].classList.add('cell-oran');
+      }
+    } else {
+      for (i in liste){
+        this.html.children[liste[i].x].children[liste[i].y].classList.add('cell-purp');
+      }
+    }
+  }
+}
 // Pour chaque piece, decrit les cases remplies et cree les pieces
 
 var pieces = [
@@ -136,26 +158,30 @@ var pieces = [
   new Piece(18, [{ x: 0, y: 1 }, { x: 0, y: 2 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 2, y: 1 }], 2, 2),
   new Piece(19, [{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 2, y: 1 }], 2, 2),
   new Piece(20, [{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 1, y: 3 }], 1, 3)
-]
-
-var dam = new Damier()
+];
+var dam = new Damier();
+var cache;
+const socket = io();
 
 function rotateLeft () {
   pieces[$('.clicked').attr('id')].rotate()
   pieces[$('.clicked').attr('id')].rotate()
   pieces[$('.clicked').attr('id')].rotate()
 }
-
 function rotateRight () {
   pieces[$('.clicked').attr('id')].rotate()
 }
-
 function flipHori () {
   pieces[$('.clicked').attr('id')].flipHori()
 }
-
 function flipVert () {
   pieces[$('.clicked').attr('id')].flipVert()
+}
+function validate () { // Au clic sur le bouton valider
+  if (cache){
+    // Requete serveur ici
+    socket.emit('play turn', JSON.stringify(cache));
+  }
 }
 
 $(document).ready(function ($) {
@@ -170,26 +196,34 @@ $(document).ready(function ($) {
       $(this).removeClass('clicked')
       $(this).children().eq(0).children().eq(0).removeClass('cell-anchor')
     }
-  })
+  });
 
   // Placement sur le board
   $('.cell').click(function () {
     var x = $(this).data('x'); var y = $(this).data('y') // la case cliquee
     if ($('.clicked').length > 0 & x + $('.clicked').eq(0).data('xmax') < 14 & y + $('.clicked').eq(0).data('ymax') < 14) {
-      var cells = pieces[$('.clicked').eq(0).attr('id')].cells // Les cases a colorer
-      $('.cell-select').removeClass('cell-select') // On retire un eventuel autre placement
+      // Coloration des cases sur le board et remplissage du cache
+      var cells = pieces[$('.clicked').eq(0).attr('id')].cells; // Les cases a colorer
+      $('.cell-select').removeClass('cell-select'); // On retire un eventuel autre placement
+      cache = {
+        id:$('.clicked').eq(0).attr('id'),
+        cells:[]
+      };
       for (var i in cells) {
-        $('#damier').children().eq(x + cells[i].x).children().eq(y + cells[i].y).addClass('cell-select')
+        $('#damier').children().eq(x+cells[i].x).children().eq(y+cells[i].y).addClass('cell-select');
+        cache.cells.push({x:x+cells[i].x,y:y+cells[i].y});
       }
     } else {
-      console.log('clic invalide')
+      console.log('clic invalide');
     }
-  })
-})
+  });
+});
 
-function validate () { // Au clic sur le bouton valider
-  //  --> Requete serveur ici
-  //
-
-  // Vider le cache de selection
-}
+socket.on('end turn', function (msg) { // Le serveur renvoie une confirmation (avec les cases a colorer) de ce que le joueur a joue
+  var response = msg.parse();
+  dam.color(response,"orange");
+});
+socket.on('turn played', function (msg) { // Le serveur envoie ce qu'a joue l'adversaire (avec les cases a colorer)
+  var response = msg.parse();
+  dam.color(response,"purple");
+});
