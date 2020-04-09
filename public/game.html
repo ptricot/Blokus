@@ -4,28 +4,34 @@
     <meta charset="utf-8">
     <title>Blokus - game</title>
     <link rel="stylesheet" type="text/css" href="style.css">
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
   </head>
   <body>
     <div class="top">
-      <img src="img/logo.jpg">
+      <img src="logo.jpg">
     </div>
-    <div class="box-pieces" id="orange">
-      <button class="but" onclick="validate()">Valider</button>
-      <table>
-        <tr>
-          <td><img src="img/rotate_left.png" class></td>
-          <td><img src="img/rotate_right.png"></td>
-          <td><img src="img/flip_hori.png"></td>
-          <td><img src="img/flip_vert.png"></td>
-        </tr>
-      </table>
-    </div>
-    <div class="box-inline" style="width:536px; height:536px;">
-      <table class="damier" id="damier">
-      </table>
-    </div>
-    <div class="box-pieces" style="width:15%; height:536px;">
+    <div style="text-align: center">
+        <div class="box-pieces">
+          <div style="border: 2px solid #555;margin-bottom:10px;">
+            <button class="but" onclick="validate()">Valider</button>
+            <table>
+              <tr>
+                <td><img src="img/rotate_left.png" class="but-opt" onclick="rotate_left()"></td>
+                <td><img src="img/rotate_right.png" class="but-opt" onclick="rotate_right()"></td>
+                <td><img src="img/flip_hori.png" class="but-opt" onclick="flip_hori()"></td>
+                <td><img src="img/flip_vert.png" class="but-opt" onclick="flip_vert()"></td>
+              </tr>
+            </table>
+          </div>
+          <div  id="orange" class="scrollable"></div>
+        </div>
+
+        <div class="box-inline" style="width:536px; height:536px;">
+          <table class="damier" id="damier">
+          </table>
+        </div>
+        <div class="box-pieces" style="width:15%; height:536px;">
+        </div>
     </div>
 
     <script type="text/javascript" src="game.js">  </script>

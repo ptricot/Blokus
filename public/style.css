@@ -47,7 +47,6 @@ img {
 .box-pieces {
   width: 15%;
   height: 536px;
-  overflow-y: scroll;
   display: inline-block;
 }
 .box-full {
@@ -62,14 +61,26 @@ img {
   background-color: #aaa;
   font-size: 130%;
 }
+.but-opt{
+  border: 2px solid #444;
+  margin: 2px;
+}
 .cell {
   width: 30px;
   height: 30px;
   border: 2px solid #222;
   background-color: #bbb;
 }
+.cell-anchor{
+  outline: 2px solid #c2c;
+  outline-offset: -1px;
+}
+.cell-select{
+  background-color: #e82;
+  border: 2px solid #2a2;
+}
 .clicked {
-  border: 2px solid #2c2;
+  border: 2px solid #2b2;
 }
 .cell-purp {
     width: 30px;
@@ -98,16 +109,17 @@ img {
 }
 .piece-cell {
   padding: 0;
-  height: 31px;
 }
 .piece-row {
   padding: 0;
 }
+.scrollable{
+  overflow-y: scroll;
+  height: 70%;
+}
 .top {
-  width: 90%;
-  margin-right: 5%;
-  margin-left: 5%;
   height: 10%;
   color: #ccc;
-  text-align: left;
+  display:flex;
+  justify-content: center;
 }
