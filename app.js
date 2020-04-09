@@ -7,9 +7,10 @@ const app = express()
 const path = require('path')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 
 // MySQL
+/*
 const mysql = require('mysql')
 const database = mysql.createConnection({
   host: 'localhost',
@@ -21,6 +22,7 @@ database.connect(function (err) {
   if (err) throw err
   console.log('Connected to Blokus database')
 })
+*/
 
 // Port
 const PORT = process.env.PORT || 8080

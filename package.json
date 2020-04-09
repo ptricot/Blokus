@@ -9,7 +9,7 @@
   },
   "author": "Mourtaza Abbasbhay",
   "dependencies": {
-    "bcrypt": "^4.0.1",
+    "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.5",
     "date-time": "^3.1.0",
     "ejs": "^3.0.2",
