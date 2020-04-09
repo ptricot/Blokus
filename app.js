@@ -8,6 +8,9 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 
+// Port
+const PORT = process.env.PORT || 3000
+
 // socket.io
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
@@ -127,6 +130,6 @@ app.use(function (err, req, res, next) {
 // -- Start server --
 // ------------------
 
-http.listen(3000, function () {
+http.listen(PORT, function () {
   console.log('\nServer started, listening on PORT 3000')
 })
