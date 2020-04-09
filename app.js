@@ -7,6 +7,20 @@ const app = express()
 const path = require('path')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
+const bcrypt = require('bcrypt')
+
+// MySQL
+const mysql = require('mysql')
+const database = mysql.createConnection({
+  host: 'localhost',
+  user: 'blokus',
+  password: '',
+  database: 'blokus'
+})
+database.connect(function (err) {
+  if (err) throw err
+  console.log('Connected to Blokus database')
+})
 
 // Port
 const PORT = process.env.PORT || 8080
@@ -30,6 +44,35 @@ app.get('/', function (req, res) {
   res.redirect('login.html')
 })
 
+// -------------
+// -- Sign Up --
+// -------------
+
+app.post('/signup', function (req, res) {
+  const username = mysql.escape(req.body.newUsername)
+  const password = mysql.escape(req.body.newPassword)
+  const confirmPassword = mysql.escape(req.body.confirmPassword)
+  if (username && password && confirmPassword) {
+    if (confirmPassword === password) {
+      bcrypt.hash(password, 10).then(function (hash) {
+        database.query('INSERT INTO accounts VALUES (id, ?, ?)', [username, hash], function (error, result) {
+          if (error) {
+            console.log(error)
+            res.redirect('/')
+          } else {
+            console.log('New user created')
+            res.redirect('lobby.html')
+          }
+        })
+      })
+    } else {
+      console.log('Password ne correspondent pas')
+    }
+  } else {
+    console.log('Champs incomplets')
+  }
+})
+
 // -----------
 // -- Login --
 // -----------
@@ -39,13 +82,25 @@ app.get('/login', function (req, res) {
 })
 
 app.post('/login', function (req, res) {
-  console.log(JSON.stringify(req.body))
-  const username = req.body.username
-  const password = req.body.password
-  if (username === 'user' && password === 'pass') {
-    res.redirect('lobby.html')
+  const username = mysql.escape(req.body.username)
+  const password = mysql.escape(req.body.password)
+  if (username && password) {
+    database.query('SELECT * FROM accounts WHERE username = ?', username, function (error, results) {
+      if (error) {
+        console.log(error)
+      } else if (results.length > 0) {
+        bcrypt.compare(password, results[0].password).then(function (result) {
+          if (result) {
+            console.log('Login successful')
+            res.redirect('lobby.html')
+          }
+        })
+      } else {
+        console.log('Login incorrect')
+      }
+    })
   } else {
-    res.redirect('/')
+    console.log('Login incomplet')
   }
 })
 
