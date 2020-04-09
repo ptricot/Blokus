@@ -59,56 +59,53 @@ app.get('/users', function (req, res) {
 // -- Socket.io --
 // -----------------
 
-let users = {}
+const users = {}
 let rooms = 0
 
 io.on('connection', function (socket) {
   // connection
-  users['username'] = socket
+  users.username = socket
   socket.emit('connection', 'username')
   console.log('a user connected')
 
   socket.on('disconnect', function () {
     socket.emit('deconnection', 'username')
     console.log('user disconnected')
-    
   })
 
   // message
-  socket.on('nouveau message', function(msg){
+  socket.on('nouveau message', function (msg) {
     socket.emit('reponse', msg) // emit : to all - sender included
     console.log('message: ' + msg)
   })
 
   // user 1 send match request to user 2
-  socket.on('envoi defi', function(data) {
+  socket.on('envoi defi', function (data) {
     users[data.user2].emit('nouveau defi', data)
     console.log(`defi de ${data.user1} pour ${data.user2}`)
   })
 
   // user 2 refuse defi
-  socket.on('refus defi', function(data) {
+  socket.on('refus defi', function (data) {
     users[data.user1].emit('defi refuse', data)
   })
 
   // user 2 accepte defi, new game start
-  socket.on('accepte defi', function(data){
+  socket.on('accepte defi', function (data) {
     // users 1 and 2 join room
-    room = 'room-' + ++rooms
+    const room = 'room-' + ++rooms
     users[data.user1].join(room)
     users[data.user2].join(room)
     io.in(data.room).emit('new game', data)
   })
 
   // play turn in a room
-  socket.on('play turn', function(data){
-  io.in(data.room).emit('turn played', {
-    tile: data.tile,
-    room: data.room
+  socket.on('play turn', function (data) {
+    io.in(data.room).emit('turn played', {
+      tile: data.tile,
+      room: data.room
+    })
   })
-})
-
-
 })
 
 // -----------------
