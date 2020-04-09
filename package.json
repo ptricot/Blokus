@@ -9,12 +9,12 @@
   },
   "author": "Mourtaza Abbasbhay",
   "dependencies": {
-    "cookie-parser": "latest",
-    "date-time": "latest",
-    "ejs": "latest",
-    "express": "latest",
-    "nodemon": "latest",
-    "socket.io": "latest",
-    "xss": "latest"
+    "cookie-parser": "^1.4.5",
+    "date-time": "^3.1.0",
+    "ejs": "^3.0.2",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.3",
+    "socket.io": "^2.3.0",
+    "xss": "^1.0.6"
   }
 }
