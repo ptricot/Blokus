@@ -322,9 +322,10 @@ io.on('connection', function (socket) {
   // Fin de jeu
   socket.on('give up', function (data) {
     data = JSON.parse(data)
-      // DELETE LA ROOM
+    // DELETE LA ROOM
+    delete rooms[data.room]
     var response = JSON.stringify(data)
-    socket.emit('fin de jeu',response)
+    socket.emit('fin de jeu', response)
   })
 })
 

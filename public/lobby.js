@@ -25,7 +25,7 @@ $(function () {
   socket.emit('new user', username)
 
   // users update
-  $('#username').text('Connecté en tant que : '+username)
+  $('#username').text('Connecté en tant que : ' + username)
   socket.on('users', function (users) {
     users = JSON.parse(users)
     console.log(users)
@@ -104,6 +104,6 @@ $(function () {
 
   // receive message
   socket.on('reponse', function (msg) {
-    $('#messages').append($('<li>').text(username+' : '+msg))
+    $('#messages').append($('<li>').text(username + ' : ' + msg))
   })
 })
