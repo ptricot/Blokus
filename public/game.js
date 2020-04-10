@@ -197,27 +197,27 @@ var pieces = [
   new Piece(20, [{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 1, y: 3 }], 1, 3, 'orange')
 ]
 var piecesPurp = [
-  new Piece(0, [{ x: 0, y: 0 }], 0, 0, 'purple'),
-  new Piece(1, [{ x: 0, y: 0 }, { x: 0, y: 1 }], 0, 1, 'purple'),
-  new Piece(2, [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }], 1, 1, 'purple'),
-  new Piece(3, [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }], 0, 2, 'purple'),
-  new Piece(4, [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }], 1, 1, 'purple'),
-  new Piece(5, [{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }], 1, 2, 'purple'),
-  new Piece(6, [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 0, y: 3 }], 0, 3, 'purple'),
-  new Piece(7, [{ x: 0, y: 2 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }], 1, 2, 'purple'),
-  new Piece(8, [{ x: 0, y: 1 }, { x: 0, y: 2 }, { x: 1, y: 0 }, { x: 1, y: 1 }], 1, 2, 'purple'),
-  new Piece(9, [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 1, y: 3 }], 1, 3, 'purple'),
-  new Piece(10, [{ x: 0, y: 1 }, { x: 1, y: 1 }, { x: 2, y: 0 }, { x: 2, y: 1 }, { x: 2, y: 2 }], 2, 2, 'purple'),
-  new Piece(11, [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 2, y: 1 }, { x: 2, y: 2 }], 2, 2, 'purple'),
-  new Piece(12, [{ x: 0, y: 1 }, { x: 0, y: 2 }, { x: 0, y: 3 }, { x: 1, y: 0 }, { x: 1, y: 1 }], 1, 3, 'purple'),
-  new Piece(13, [{ x: 0, y: 2 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 2, y: 0 }], 2, 2, 'purple'),
-  new Piece(14, [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 0, y: 3 }, { x: 0, y: 4 }], 0, 4, 'purple'),
-  new Piece(15, [{ x: 0, y: 1 }, { x: 0, y: 2 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }], 1, 2, 'purple'),
-  new Piece(16, [{ x: 0, y: 1 }, { x: 0, y: 2 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 2, y: 0 }], 2, 2, 'purple'),
-  new Piece(17, [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 2, y: 1 }], 2, 1, 'purple'),
-  new Piece(18, [{ x: 0, y: 1 }, { x: 0, y: 2 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 2, y: 1 }], 2, 2, 'purple'),
-  new Piece(19, [{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 2, y: 1 }], 2, 2, 'purple'),
-  new Piece(20, [{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 1, y: 3 }], 1, 3, 'purple')
+  new Piece(21, [{ x: 0, y: 0 }], 0, 0, 'purple'),
+  new Piece(22, [{ x: 0, y: 0 }, { x: 0, y: 1 }], 0, 1, 'purple'),
+  new Piece(23, [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 1 }], 1, 1, 'purple'),
+  new Piece(24, [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }], 0, 2, 'purple'),
+  new Piece(25, [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }], 1, 1, 'purple'),
+  new Piece(26, [{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }], 1, 2, 'purple'),
+  new Piece(27, [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 0, y: 3 }], 0, 3, 'purple'),
+  new Piece(28, [{ x: 0, y: 2 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }], 1, 2, 'purple'),
+  new Piece(29, [{ x: 0, y: 1 }, { x: 0, y: 2 }, { x: 1, y: 0 }, { x: 1, y: 1 }], 1, 2, 'purple'),
+  new Piece(30, [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 1, y: 3 }], 1, 3, 'purple'),
+  new Piece(31, [{ x: 0, y: 1 }, { x: 1, y: 1 }, { x: 2, y: 0 }, { x: 2, y: 1 }, { x: 2, y: 2 }], 2, 2, 'purple'),
+  new Piece(32, [{ x: 0, y: 0 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 2, y: 1 }, { x: 2, y: 2 }], 2, 2, 'purple'),
+  new Piece(33, [{ x: 0, y: 1 }, { x: 0, y: 2 }, { x: 0, y: 3 }, { x: 1, y: 0 }, { x: 1, y: 1 }], 1, 3, 'purple'),
+  new Piece(34, [{ x: 0, y: 2 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 2, y: 0 }], 2, 2, 'purple'),
+  new Piece(35, [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 0, y: 2 }, { x: 0, y: 3 }, { x: 0, y: 4 }], 0, 4, 'purple'),
+  new Piece(36, [{ x: 0, y: 1 }, { x: 0, y: 2 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }], 1, 2, 'purple'),
+  new Piece(37, [{ x: 0, y: 1 }, { x: 0, y: 2 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 2, y: 0 }], 2, 2, 'purple'),
+  new Piece(38, [{ x: 0, y: 0 }, { x: 0, y: 1 }, { x: 1, y: 0 }, { x: 2, y: 0 }, { x: 2, y: 1 }], 2, 1, 'purple'),
+  new Piece(39, [{ x: 0, y: 1 }, { x: 0, y: 2 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 2, y: 1 }], 2, 2, 'purple'),
+  new Piece(40, [{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 2, y: 1 }], 2, 2, 'purple'),
+  new Piece(41, [{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 1, y: 3 }], 1, 3, 'purple')
 ]
 var dam = new Damier()
 var cache
