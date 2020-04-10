@@ -307,9 +307,14 @@ io.on('connection', function (socket) {
   // Fin de jeu
   socket.on('give up', function (data) {
     data = JSON.parse(data)
-      // DELETE LA ROOM
-    var response = JSON.stringify(data)
-    socket.emit('fin de jeu',response)
+    if (data.numero ===1 ) {rooms[data.room].giveUp1 = true}
+    else {rooms[data.room].giveUp2 = true}
+    if (rooms[data.room].giveUp1 && rooms[data.room].giveUp2){
+      var response = JSON.stringify(data)
+      socket.emit('fin de jeu',response)
+    }
+    rooms[data.room].playerPlaying = rooms[data.room].playerPlaying % 2 + 1
+    socket.emit('turn pass',JSON.stringify({numero:data.numero}))
   })
 })
 
