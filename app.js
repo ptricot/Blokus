@@ -328,6 +328,7 @@ io.on('connection', function (socket) {
   // play turn in a room
   socket.on('play turn', function (data) {
     data = JSON.parse(data)
+    let change = false
     if (verify(data)) {
       var board = rooms[data.room].board
       for (var i in data.cells) {
@@ -339,8 +340,10 @@ io.on('connection', function (socket) {
       } else if (data.room.giveUp2) {
         rooms[data.room].playerPlaying = 1
       } else {
+        change = true
         rooms[data.room].playerPlaying = 1 + (rooms[data.room].playerPlaying % 2)
       }
+      data.change = change
       io.in(data.room).emit('turn played', JSON.stringify(data))
     }
   })
@@ -348,14 +351,35 @@ io.on('connection', function (socket) {
   // Fin de jeu
   socket.on('give up', function (data) {
     data = JSON.parse(data)
-    if (data.numero ===1 ) {rooms[data.room].giveUp1 = true}
-    else {rooms[data.room].giveUp2 = true}
-    if (rooms[data.room].giveUp1 && rooms[data.room].giveUp2){
-      var response = JSON.stringify(data)
-      socket.emit('fin de jeu',response)
+    if (data.numero === 1) { rooms[data.room].giveUp1 = true } else { rooms[data.room].giveUp2 = true }
+    if (rooms[data.room].giveUp1 && rooms[data.room].giveUp2) {
+      const board = rooms[data.room].board
+      let score1 = 0
+      let score2 = 0
+      let winner = 0
+      for (var i = 0; i < 14; i++) {
+        for (var j = 0; j < 14; j++) {
+          if (board[i][j] === 1) {
+            score1++
+          } else if (board[i][j] === 2) {
+            score2++
+          }
+        }
+      }
+      if (score1 > score2) {
+        winner = 1
+      } else if (score2 > score1) {
+        winner = 2
+      }
+      const response = {
+        winner: winner,
+        score: [score1, score2]
+      }
+      socket.emit('fin de jeu', JSON.stringify(response))
+    } else {
+      rooms[data.room].playerPlaying = rooms[data.room].playerPlaying % 2 + 1
+      io.in(data.room).emit('turn pass', JSON.stringify({ numero: data.numero }))
     }
-    rooms[data.room].playerPlaying = rooms[data.room].playerPlaying % 2 + 1
-    socket.emit('turn pass',JSON.stringify({numero:data.numero}))
   })
 })
 

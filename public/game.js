@@ -324,22 +324,21 @@ $(function () {
   socket.on('fin de jeu', function (data) {
     data = JSON.parse(data)
     if (data.winner === cookies.numero) {
-      alert('Bravo, vous avez gagné ! \n '+'Votre score : '+data.score[cookies.numero-1]+'\n'+'Score de l\'adversaire : '+data.score[(cookies.numero)%2])
-    } else if (data.winner>0){
-      alert('Dommage, vous avez perdu ! \n '+'Votre score : '+data.score[cookies.numero-1]+'\n'+'Score de l\'adversaire : '+data.score[(cookies.numero)%2])
+      alert('Bravo, vous avez gagné ! \n ' + 'Votre score : ' + data.score[cookies.numero - 1] + '\n' + 'Score de l\'adversaire : ' + data.score[cookies.numero % 2])
+    } else if (data.winner > 0) {
+      alert('Dommage, vous avez perdu ! \n ' + 'Votre score : ' + data.score[cookies.numero - 1] + '\n' + 'Score de l\'adversaire : ' + data.score[cookies.numero % 2])
     } else {
-      alert('C\'est une égalité ! \n Score : '+data.score[0])
+      alert('C\'est une égalité ! \n Score : ' + data.score[0])
     }
     window.location = '/'
   })
 
-  socket.on('turn pass',function (data) {
-    data=JSON.parse(data)
-    if (data.numero===cookies.numero){
+  socket.on('turn pass', function (data) {
+    data = JSON.parse(data)
+    if (data.numero === cookies.numero) {
       $('#giveup').unbind('click')
       $('#info').text("L'adversaire est en train de jouer.")
-    }
-    else {
+    } else {
       $('#info').text('L\'adversaire ne peut plus jouer, c\'est à vous de jouer.')
     }
   })
