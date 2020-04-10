@@ -1,6 +1,18 @@
 /* global $ */
 /* global io */
 
+// Read cookies : user=username; adversaire=username2; room=room-name; numero=joueur
+const cookies = {}
+const text = document.cookie.split('; ')
+for (var i in text) {
+  var key, value
+  [key, value] = text[i].split('=')
+  cookies[key] = value
+}
+cookies.numero=parseInt(cookies.numero)
+
+// classes
+
 class Piece {
   constructor (i, cells, xmax, ymax, color) {
     this.cells = cells
@@ -116,6 +128,18 @@ class Damier {
       }
       this.html.appendChild(tr)
     }
+    if (cookies.numero===1) {
+      $('#damier').children().eq(4).children().eq(4).removeClass('cell')
+      $('#damier').children().eq(9).children().eq(9).removeClass('cell')
+      $('#damier').children().eq(4).children().eq(4).addClass('border-or')
+      $('#damier').children().eq(9).children().eq(9).addClass('border-pur')
+    }
+    if (cookies.numero===2) {
+      $('#damier').children().eq(4).children().eq(4).removeClass('cell')
+      $('#damier').children().eq(9).children().eq(9).removeClass('cell')
+      $('#damier').children().eq(4).children().eq(4).addClass('border-pur')
+      $('#damier').children().eq(9).children().eq(9).addClass('border-or')
+    }
   }
 
   update (tableau) { // 0:vide, 1:orange, 2:violet
@@ -199,16 +223,6 @@ var dam = new Damier()
 var cache
 const socket = io()
 
-// Read cookies : user=username; adversaire=username2; room=room-name; numero=joueur
-const cookies = {}
-const text = document.cookie.split('; ')
-for (var i in text) {
-  var key, value
-  [key, value] = text[i].split('=')
-  cookies[key] = value
-}
-console.log(cookies)
-
 function rotateLeft () {
   pieces[$('.clicked').attr('id')].rotate()
   pieces[$('.clicked').attr('id')].rotate()
@@ -245,7 +259,7 @@ $(function () {
   })
 
   // Placement sur le board
-  $('.cell').click(function () {
+  $('.cell, .border-or, .border-pur').click(function () {
     var x = $(this).data('x'); var y = $(this).data('y') // la case cliquee
     if ($('.clicked').length > 0 & x + $('.clicked').eq(0).data('xmax') < 14 & y + $('.clicked').eq(0).data('ymax') < 14) {
       // Coloration des cases sur le board et remplissage du cache
