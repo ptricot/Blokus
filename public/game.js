@@ -1,5 +1,6 @@
 /* global $ */
 /* global io */
+/* global alert */
 
 $(function () {
   const socket = io()
@@ -272,7 +273,7 @@ $(function () {
   // Placement sur le board
   $('.cell, .border-or, .border-pur').click(function () {
     var x = $(this).data('x'); var y = $(this).data('y') // la case cliquee
-    if ($('.clicked').length > 0 & x + $('.clicked').eq(0).data('xmax') < 14 & y + $('.clicked').eq(0).data('ymax') < 14) {
+    if ($('.clicked').length > 0) {
       // Coloration des cases sur le board et remplissage du cache
       var cells = pieces[$('.clicked').eq(0).attr('id')].cells // Les cases a colorer
       $('.cell-select').removeClass('cell-select') // On retire un eventuel autre placement
@@ -312,18 +313,17 @@ $(function () {
     board.color(data.cells, color) // coloration sur le board
   })
 
-  $('#giveup').click(function(){
-    socket.emit('give up', JSON.stringify({numero:cookies.numero}))
+  $('#giveup').click(function () {
+    socket.emit('give up', JSON.stringify(cookies))
   })
 
-  socket.on('fin de jeu',function (data) {
-    data=JSON.parse(data)
-    if (data.numero===cookies.numero) {
-      alert(`Dommage, vous avez perdu !`)
+  socket.on('fin de jeu', function (data) {
+    data = JSON.parse(data)
+    if (data.numero === cookies.numero) {
+      alert('Dommage, vous avez perdu !')
       window.location = '/'
-    }
-    else {
-      alert(`Bravo, vous avez gagné !`)
+    } else {
+      alert('Bravo, vous avez gagné !')
       window.location = '/'
     }
   })

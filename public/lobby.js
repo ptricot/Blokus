@@ -6,6 +6,11 @@
 $(function () {
   const socket = io()
 
+  // reset previous game cookies
+  document.cookie = 'room=-1 ; expires = Thu, 01 Jan 1970 00:00:00 GMT'
+  document.cookie = 'adversaire=-1 ; expires = Thu, 01 Jan 1970 00:00:00 GMT'
+  document.cookie = 'numero=-1 ; expires = Thu, 01 Jan 1970 00:00:00 GMT'
+
   // Read cookies : user=username; adversaire=username2; room=room-name; numero=joueur
   const cookies = {}
   const text = document.cookie.split('; ')
@@ -20,9 +25,10 @@ $(function () {
   socket.emit('new user', username)
 
   // users update
-  $('#username').text('Connecté en tant que : '+username)
+  $('#username').text('Connecté en tant que : ' + username)
   socket.on('users', function (users) {
     users = JSON.parse(users)
+    console.log(users)
     // remove self
     users.splice(users.indexOf(username), 1)
     $('#nUsers').html(users.length)
@@ -92,12 +98,17 @@ $(function () {
   // send message
   $('#chat').submit(function (e) {
     e.preventDefault()
-    socket.emit('nouveau message', $('#msg').val())
+    socket.emit('nouveau message', JSON.stringify({
+      msg: $('#msg').val(),
+      username: username
+    }))
     $('#msg').val('')
   })
 
   // receive message
-  socket.on('reponse', function (msg) {
-    $('#messages').append($('<li>').text(username+' : '+msg))
+  socket.on('reponse', function (data) {
+    data = JSON.parse(data)
+
+    $('#messages').append($('<li>').text(data.username + ' : ' + data.msg))
   })
 })

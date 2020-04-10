@@ -11,6 +11,7 @@ const bcrypt = require('bcryptjs')
 const mysql = require('mysql')
 
 // MySQL
+/* // LOCAL
 const database = mysql.createConnection({
   host: 'localhost',
   user: 'blokus',
@@ -19,7 +20,39 @@ const database = mysql.createConnection({
 })
 database.connect(function () {
   console.log('Connected to Blokus database')
-})
+}) */
+
+var dbConfig = {
+  host: 'eu-cdbr-west-02.cleardb.net',
+  user: 'bd7d950cc1056b',
+  password: 'bb98eee7',
+  database: 'heroku_bbadf2b2121fcd1'
+}
+
+var database
+
+function handleDisconnect () {
+  database = mysql.createConnection(dbConfig) // Recreate the connection, since
+  // the old one cannot be reused.
+
+  database.connect(function (err) { // The server is either down
+    if (err) { // or restarting (takes a while sometimes).
+      console.log('error when connecting to db:', err)
+      setTimeout(handleDisconnect, 2000) // We introduce a delay before attempting to reconnect,
+    } // to avoid a hot loop, and to allow our node script to
+  }) // process asynchronous requests in the meantime.
+  // If you're also serving http, display a 503 error.
+  database.on('error', function (err) {
+    console.log('db error', err)
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+      handleDisconnect() // lost due to either server restart, or a
+    } else { // connnection idle timeout (the wait_timeout
+      throw err // server variable configures this)
+    }
+  })
+}
+
+handleDisconnect()
 
 // Port
 const PORT = process.env.PORT || 8080
@@ -98,7 +131,8 @@ app.post('/signup', function (req, res) {
 let nGuests = 0
 
 app.get('/login', function (req, res) {
-  req.session.user = 'guest-' + ++nGuests
+  nGuests = nGuests + 1
+  req.session.user = 'guest-' + nGuests
   res.cookie('user', req.session.user)
   console.log(`Login successful : ${req.session.user}`)
   res.redirect('/')
@@ -179,21 +213,22 @@ io.on('connection', function (socket) {
   socket.on('new user', function (username) {
     socket.username = username
     sockets.push(socket)
+    console.log(`${username} joined lobby`)
     io.emit('users', JSON.stringify(getUsernames()))
   })
 
   socket.on('disconnect', function () {
-    sockets.splice(sockets.indexOf(socket), 1)
-    if (re.test(socket.username)) {
-      nGuests--
+    if (socket.username) {
+      sockets.splice(sockets.indexOf(socket), 1)
+      console.log(`${socket.username} left lobby`)
+      io.emit('users', JSON.stringify(getUsernames()))
     }
-    io.emit('users', JSON.stringify(getUsernames()))
   })
 
   // message
-  socket.on('nouveau message', function (msg) {
-    socket.emit('reponse', msg) // emit : to all - sender included
-    console.log('message: ' + msg)
+  socket.on('nouveau message', function (data) {
+    io.emit('reponse', data) // emit : to all - sender included
+    console.log('message: ' + JSON.stringify(data))
   })
 
   // user 1 send match request to user 2
@@ -211,7 +246,8 @@ io.on('connection', function (socket) {
   // user 2 accepte defi, new game start
   socket.on('accepte defi', function (user1) {
     // users 1 and 2 join room
-    const roomName = 'room-' + ++nRooms
+    nRooms = nRooms + 1
+    const roomName = 'room-' + nRooms
     const board = Array(14).fill(0)
     for (var i = 0; i < 14; i++) {
       board[i] = Array(14).fill(0)
@@ -240,9 +276,6 @@ io.on('connection', function (socket) {
     Object.keys(rooms).forEach(key => {
       if (key === roomName && (rooms[key].user1 === user || rooms[key].user2 === user) && (rooms[key].user1 = adversaire || rooms[key].user2 === adversaire)) {
         socket.join(roomName)
-        // if (io.sockets.adapter.rooms[key].length === 2) {
-        //   io.in(roomName).emit('start game')
-        // }
       }
     })
   })
