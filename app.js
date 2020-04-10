@@ -246,6 +246,7 @@ io.on('connection', function (socket) {
   function verify (data) { // verifie si la piece definie par cells du joueur numero peut rentrer dans le board (return boolean)
     var cells = data.cells
     var numero = data.numero
+    console.log(typeof numero)
     var cornerTouch = false
     var board = rooms[data.room].board
     if (numero !== rooms[data.room].playerPlaying) {
@@ -269,9 +270,13 @@ io.on('connection', function (socket) {
       for (var i = 0; i < 14; i++) {
         for (var j = 0; j < 14; j++) {
         // verifie les coins adjacents
-          if (board[i][j] === numero & Math.abs(i - cell.x) === 1 & Math.abs(j - cell.y) === 1) { cornerTouch = true }
+          console.log(i, j, cell.x, cell.y, board[i][j])
+          if (board[i][j] === numero && Math.abs(i - cell.x) === 1 && Math.abs(j - cell.y) === 1) {
+            cornerTouch = true
+            console.log('Corner touch')
+          }
           // verifie qu'il n'y ai pas de cotés adjacents
-          if (board[i][j] === numero & ((Math.abs(i - cell.x) === 1 & Math.abs(j - cell.y) === 0) || (Math.abs(i - cell.x) === 0 & Math.abs(j - cell.y) === 1))) {
+          if (board[i][j] === numero && ((Math.abs(i - cell.x) === 1 && Math.abs(j - cell.y) === 0) || (Math.abs(i - cell.x) === 0 && Math.abs(j - cell.y) === 1))) {
             console.log('Faces adjacentes')
             return false
           }

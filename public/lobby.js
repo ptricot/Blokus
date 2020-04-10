@@ -6,8 +6,17 @@
 $(function () {
   const socket = io()
 
+  // Read cookies : user=username; adversaire=username2; room=room-name; numero=joueur
+  const cookies = {}
+  const text = document.cookie.split('; ')
+  for (var i in text) {
+    var key, value
+    [key, value] = text[i].split('=')
+    cookies[key] = value
+  }
+  const username = cookies.user
+
   // send username to socket
-  const username = document.cookie.split(';')[0].split('=')[1]
   socket.emit('new user', username)
 
   // users update
