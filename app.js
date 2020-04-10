@@ -11,7 +11,7 @@ const bcrypt = require('bcryptjs')
 const mysql = require('mysql')
 
 // MySQL
-/*
+/* // LOCAL
 const database = mysql.createConnection({
   host: 'localhost',
   user: 'blokus',
@@ -21,19 +21,38 @@ const database = mysql.createConnection({
 database.connect(function () {
   console.log('Connected to Blokus database')
 }) */
-const database = mysql.createConnection({
+
+var dbConfig = {
   host: 'eu-cdbr-west-02.cleardb.net',
   user: 'bd7d950cc1056b',
   password: 'bb98eee7',
   database: 'heroku_bbadf2b2121fcd1'
-})
-database.connect(function (err) {
-  if (err) {
-    console.log(err)
-    return
-  }
-  console.log('Connected to Blokus database')
-})
+}
+
+var database
+
+function handleDisconnect () {
+  database = mysql.createConnection(dbConfig) // Recreate the connection, since
+  // the old one cannot be reused.
+
+  database.connect(function (err) { // The server is either down
+    if (err) { // or restarting (takes a while sometimes).
+      console.log('error when connecting to db:', err)
+      setTimeout(handleDisconnect, 2000) // We introduce a delay before attempting to reconnect,
+    } // to avoid a hot loop, and to allow our node script to
+  }) // process asynchronous requests in the meantime.
+  // If you're also serving http, display a 503 error.
+  database.on('error', function (err) {
+    console.log('db error', err)
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+      handleDisconnect() // lost due to either server restart, or a
+    } else { // connnection idle timeout (the wait_timeout
+      throw err // server variable configures this)
+    }
+  })
+}
+
+handleDisconnect()
 
 // Port
 const PORT = process.env.PORT || 8080
