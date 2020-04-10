@@ -99,7 +99,6 @@ class Damier {
     this.html = document.getElementById('damier')
     this.init()
   }
-
   init () {
     for (var i = 0; i < 14; i++) {
       var tr = document.createElement('TR')
