@@ -318,6 +318,14 @@ io.on('connection', function (socket) {
       io.in(data.room).emit('turn played', JSON.stringify(data))
     }
   })
+
+  // Fin de jeu
+  socket.on('give up', function (data) {
+    data = JSON.parse(data)
+      // DELETE LA ROOM
+    var response = JSON.stringify(data)
+    socket.emit('fin de jeu',response)
+  })
 })
 
 // -----------------
