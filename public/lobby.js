@@ -99,7 +99,7 @@ $(function () {
   $('#chat').submit(function (e) {
     e.preventDefault()
     socket.emit('nouveau message', JSON.stringify({
-      message: $('#msg').val(),
+      msg: $('#msg').val(),
       username: username
     }))
     $('#msg').val('')
