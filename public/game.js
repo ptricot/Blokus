@@ -320,14 +320,13 @@ $(function () {
   socket.on('fin de jeu', function (data) {
     data = JSON.parse(data)
     if (data.winner === cookies.numero) {
-      alert('Bravo, vous avez gagné ! \n ' + 'Votre score : ' + data.score[cookies.numero - 1] + '\n' + 'Score de l\'adversaire : ' + data.score[(cookies.numero + 1) % 2])
-      window.location = '/'
+      alert('Bravo, vous avez gagné ! \n ' + 'Votre score : ' + data.score[cookies.numero - 1] + '\n' + 'Score de l\'adversaire : ' + data.score[cookies.numero % 2])
     } else if (data.winner > 0) {
-      alert('Dommage, vous avez perdu ! \n ' + 'Votre score : ' + data.score[cookies.numero - 1] + '\n' + 'Score de l\'adversaire : ' + data.score[(cookies.numero + 1) % 2])
-      window.location = '/'
+      alert('Dommage, vous avez perdu ! \n ' + 'Votre score : ' + data.score[cookies.numero - 1] + '\n' + 'Score de l\'adversaire : ' + data.score[cookies.numero % 2])
     } else {
       alert('C\'est une égalité ! \n Score : ' + data.score[0])
     }
+    window.location = '/'
   })
 
   socket.on('turn pass', function (data) {

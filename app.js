@@ -328,6 +328,7 @@ io.on('connection', function (socket) {
   // play turn in a room
   socket.on('play turn', function (data) {
     data = JSON.parse(data)
+    let change = false
     if (verify(data)) {
       var board = rooms[data.room].board
       for (var i in data.cells) {
@@ -339,8 +340,10 @@ io.on('connection', function (socket) {
       } else if (data.room.giveUp2) {
         rooms[data.room].playerPlaying = 1
       } else {
+        change = true
         rooms[data.room].playerPlaying = 1 + (rooms[data.room].playerPlaying % 2)
       }
+      data.change = change
       io.in(data.room).emit('turn played', JSON.stringify(data))
     }
   })
@@ -375,7 +378,7 @@ io.on('connection', function (socket) {
       socket.emit('fin de jeu', JSON.stringify(response))
     } else {
       rooms[data.room].playerPlaying = rooms[data.room].playerPlaying % 2 + 1
-      socket.emit('turn pass', JSON.stringify({ numero: data.numero }))
+      io.in(data.room).emit('turn pass', JSON.stringify({ numero: data.numero }))
     }
   })
 })
