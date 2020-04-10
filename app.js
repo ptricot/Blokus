@@ -17,7 +17,7 @@ const database = mysql.createConnection({
   password: '',
   database: 'blokus'
 })
-database.connect(function (err) {
+database.connect(function () {
   console.log('Connected to Blokus database')
 })
 
@@ -121,7 +121,10 @@ app.post('/login', function (req, res) {
         res.redirect('/')
       } else {
         bcrypt.compare(password, results[0].password).then(function (result) {
-          if (result) {
+          if (!result) {
+            console.log('Login incorrect')
+            res.redirect('/')
+          } else {
             req.session.user = username
             res.cookie('user', req.session.user)
             console.log(`Login successful : ${username}`)
@@ -136,6 +139,9 @@ app.post('/login', function (req, res) {
 // Logout
 app.get('/logout', function (req, res) {
   console.log(`Logout successful : ${req.session.user}`)
+  res.clearCookie('user')
+  res.clearCookie('connect.sid')
+  res.clearCookie('io')
   req.session.destroy()
   res.redirect('/')
 })
@@ -144,7 +150,7 @@ app.get('/logout', function (req, res) {
 // -- Socket.io --
 // -----------------
 const sockets = []
-const rooms = []
+const rooms = {}
 let nRooms = 0
 
 const getUsernames = function () {
@@ -205,37 +211,52 @@ io.on('connection', function (socket) {
   // user 2 accepte defi, new game start
   socket.on('accepte defi', function (user1) {
     // users 1 and 2 join room
+    const roomName = 'room-' + ++nRooms
     const room = {
-      name: 'room-' + ++nRooms,
+      name: roomName,
       user1: user1,
-      user2: socket.username
+      user2: socket.username,
+      playerPlaying: 1, // 1:joueur1 2:joueur2
+      board: Array(9).fill(Array(9).fill(0)) // 0:vide 1:joueur1 2:joueur2
     }
-    rooms.push(room)
-    findSocket(user1).join(room)
-    socket.join(room)
-    io.in(room).emit('new game', room)
+    rooms[roomName] = room
+    findSocket(user1).emit('new game', room)
+    findSocket(socket.username).emit('new game', room)
   })
 
   // --------------------
-  // ---Game handling----
+  // -- Game handling ---
   // --------------------
 
-  var board = Array(9).fill(Array(9).fill(0)) // 0:vide 1:joueur1 2:joueur2
-  var aQuiDeJouer = 1 // Le joueur 1 joue en premier
+  socket.on('user joined', function (data) {
+    const user = data.user
+    const adversaire = data.adversaire
+    const roomName = data.room
+    Object.keys(rooms).forEach(key => {
+      if (key === roomName && (rooms[key].user1 === user || rooms[key].user2 === user) && (rooms[key].user1 = adversaire || rooms[key].user2 === adversaire)) {
+        socket.join(roomName)
+        if (io.sockets.adapter.rooms[key].length === 2) {
+          io.in(roomName).emit('start game')
+        }
+      }
+    })
+  })
 
-  function verify (cells, nplayer) { // verifie si la piece definie par cells du joueur nplayer peut rentrer dans le board (return boolean)
+  function verify (data) { // verifie si la piece definie par cells du joueur numero peut rentrer dans le board (return boolean)
+    var cells = data.cells
+    var numero = data.numero
     var cornerTouch = false
+    var board = rooms[data.room].board
     for (var k in cells) {
       var cell = cells[k]
-      if ((nplayer===1 & cell.x===4 & cell.y===4)||(nplayer===2 & cell.x===9 & cell.y===9)) {return True}
       if (cell.x >= 14 || cell.x < 0 || cell.y >= 14 || cell.y < 0) { return false } // pas de sortie du board
       if (board[cell.x][cell.y] !== 0) { return false } // pas de superposition
       for (var i = 0; i < 14; i++) {
         for (var j = 0; j < 14; j++) {
         // verifie les coins adjacents
-          if (board[i][j] === nplayer & Math.abs(i - cell.x) === 1 & Math.abs(j - cell.y) === 1) { cornerTouch = true }
+          if (board[i][j] === numero & Math.abs(i - cell.x) === 1 & Math.abs(j - cell.y) === 1) { cornerTouch = true }
           // verifie qu'il n'y ai pas de cotés adjacents
-          if (board[i][j] === nplayer & ((Math.abs(i - cell.x) === 1 & Math.abs(j - cell.y) === 0) || (Math.abs(i - cell.x) === 0 & Math.abs(j - cell.y) === 1))) { return false }
+          if (board[i][j] === numero & ((Math.abs(i - cell.x) === 1 & Math.abs(j - cell.y) === 0) || (Math.abs(i - cell.x) === 0 & Math.abs(j - cell.y) === 1))) { return false }
         }
       }
     }
@@ -244,10 +265,9 @@ io.on('connection', function (socket) {
 
   // play turn in a room
   socket.on('play turn', function (data) {
-    io.in(data.room).emit('turn played', {
-      tile: data.tile,
-      room: data.room
-    })
+    if (verify(data)) {
+      io.in(data.room).emit('turn played', data)
+    }
   })
 })
 
