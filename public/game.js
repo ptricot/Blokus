@@ -303,12 +303,16 @@ $(function () {
       cache = null
       $('.clicked').removeClass('clicked')
       $('.cell-anchor').removeClass('cell-anchor')
-      $('#info').text("L'adversaire est en train de jouer.")
+      if (data.change) {
+        $('#info').text("L'adversaire est en train de jouer.")
+      }
     } else { // l'adversaire a joué
       color = 'purple'
       piecesPurp[data.id].toGray() // la piece devient grisée dans le bac a pieces
       console.log("l'adversaire a joué")
-      $('#info').text('A vous de jouer.\n Sélectionnez une pièce, tournez-la\n et placez-la sur le plateau.')
+      if (data.change) {
+        $('#info').text('A vous de jouer.\n Sélectionnez une pièce, tournez-la\n et placez-la sur le plateau.')
+      }
     }
     board.color(data.cells, color) // coloration sur le board
   })
@@ -320,14 +324,13 @@ $(function () {
   socket.on('fin de jeu', function (data) {
     data = JSON.parse(data)
     if (data.winner === cookies.numero) {
-      alert('Bravo, vous avez gagné ! \n '+'Votre score : '+data.score[cookies.numero-1]+'\n'+'Score de l\'adversaire : '+data.score[(cookies.numero+1)%2])
-      window.location = '/'
+      alert('Bravo, vous avez gagné ! \n '+'Votre score : '+data.score[cookies.numero-1]+'\n'+'Score de l\'adversaire : '+data.score[(cookies.numero)%2])
     } else if (data.winner>0){
-      alert('Dommage, vous avez perdu ! \n '+'Votre score : '+data.score[cookies.numero-1]+'\n'+'Score de l\'adversaire : '+data.score[(cookies.numero+1)%2])
-      window.location = '/'
+      alert('Dommage, vous avez perdu ! \n '+'Votre score : '+data.score[cookies.numero-1]+'\n'+'Score de l\'adversaire : '+data.score[(cookies.numero)%2])
     } else {
       alert('C\'est une égalité ! \n Score : '+data.score[0])
     }
+    window.location = '/'
   })
 
   socket.on('turn pass',function (data) {
