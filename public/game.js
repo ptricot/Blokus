@@ -304,6 +304,7 @@ $(function () {
       $('.clicked').removeClass('clicked')
       $('.cell-anchor').removeClass('cell-anchor')
       if (data.change) {
+        console.log(1)
         $('#info').text("L'adversaire est en train de jouer.")
       }
     } else { // l'adversaire a joué
@@ -311,6 +312,7 @@ $(function () {
       piecesPurp[data.id].toGray() // la piece devient grisée dans le bac a pieces
       console.log("l'adversaire a joué")
       if (data.change) {
+        console.log(1)
         $('#info').text('A vous de jouer.\n Sélectionnez une pièce, tournez-la\n et placez-la sur le plateau.')
       }
     }

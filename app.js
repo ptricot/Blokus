@@ -328,6 +328,7 @@ io.on('connection', function (socket) {
   // play turn in a room
   socket.on('play turn', function (data) {
     data = JSON.parse(data)
+    const room = rooms[data.room]
     let change = false
     if (verify(data)) {
       var board = rooms[data.room].board
@@ -335,15 +336,16 @@ io.on('connection', function (socket) {
         var cell = data.cells[i]
         board[cell.x][cell.y] = data.numero
       }
-      if (data.room.giveUp1) {
-        rooms[data.room].playerPlaying = 2
-      } else if (data.room.giveUp2) {
-        rooms[data.room].playerPlaying = 1
+      if (room.giveUp1) {
+        room.playerPlaying = 2
+      } else if (room.giveUp2) {
+        room.playerPlaying = 1
       } else {
         change = true
-        rooms[data.room].playerPlaying = 1 + (rooms[data.room].playerPlaying % 2)
+        room.playerPlaying = 1 + (room.playerPlaying % 2)
       }
       data.change = change
+      console.log(change)
       io.in(data.room).emit('turn played', JSON.stringify(data))
     }
   })
@@ -351,9 +353,16 @@ io.on('connection', function (socket) {
   // Fin de jeu
   socket.on('give up', function (data) {
     data = JSON.parse(data)
-    if (data.numero === 1) { rooms[data.room].giveUp1 = true } else { rooms[data.room].giveUp2 = true }
-    if (rooms[data.room].giveUp1 && rooms[data.room].giveUp2) {
-      const board = rooms[data.room].board
+    const room = rooms[data.room]
+    if (data.numero === 1) {
+      room.giveUp1 = true
+      room.playerPlaying = 1
+    } else {
+      room.giveUp2 = true
+      room.playerPlaying = 2
+    }
+    if (room.giveUp1 && room.giveUp2) {
+      const board = room.board
       let score1 = 0
       let score2 = 0
       let winner = 0
@@ -375,9 +384,9 @@ io.on('connection', function (socket) {
         winner: winner,
         score: [score1, score2]
       }
-      socket.emit('fin de jeu', JSON.stringify(response))
+      io.in(data.room).emit('fin de jeu', JSON.stringify(response))
     } else {
-      rooms[data.room].playerPlaying = rooms[data.room].playerPlaying % 2 + 1
+      room.playerPlaying = room.playerPlaying % 2 + 1
       io.in(data.room).emit('turn pass', JSON.stringify({ numero: data.numero }))
     }
   })
