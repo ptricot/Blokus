@@ -110,11 +110,12 @@ class Piece {
     this.fill()
   }
 }
-class Damier {
+class Board {
   constructor () {
     this.html = document.getElementById('damier')
     this.init()
   }
+
   init () {
     for (var i = 0; i < 14; i++) {
       var tr = document.createElement('TR')
@@ -219,7 +220,7 @@ var piecesPurp = [
   new Piece(40, [{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 2, y: 1 }], 2, 2, 'purple'),
   new Piece(41, [{ x: 0, y: 1 }, { x: 1, y: 0 }, { x: 1, y: 1 }, { x: 1, y: 2 }, { x: 1, y: 3 }], 1, 3, 'purple')
 ]
-var dam = new Damier()
+var board = new Board()
 var cache
 const socket = io()
 
@@ -267,7 +268,8 @@ $(function () {
       $('.cell-select').removeClass('cell-select') // On retire un eventuel autre placement
       cache = {
         id: $('.clicked').eq(0).attr('id'),
-        cells: []
+        cells: [],
+        numero: cookies.numero
       }
       for (var i in cells) {
         $('#damier').children().eq(x + cells[i].x).children().eq(y + cells[i].y).addClass('cell-select')
@@ -279,15 +281,15 @@ $(function () {
   })
 })
 
-socket.on('end turn', function (msg) { // Le serveur renvoie une confirmation (avec les cases a colorer) de ce que le joueur a joue
-  var response = msg.parse()
-  dam.color(response.cells, 'orange') // coloration sur le board
-  pieces[response.id].toGray() // la piece devient grisée dans le bac a pieces
-  $('#' + response.id).click(function ($) { return 0 }) // desactive le clic sur la piece
-  $('.cell-select').removeClass('cell-select')
-})
-socket.on('turn played', function (msg) { // Le serveur envoie ce qu'a joue l'adversaire (avec les cases a colorer)
-  var response = msg.parse()
-  dam.color(response.cells, 'purple')
+socket.on('turn played', function (data) { // Le serveur envoie ce qui a été joué (avec les cases a colorer)
+  var response = data.parse()
+  var color
+  if (response.numero === cookies.numero) { // Ce joueur a joué
+    color = 'orange'
+    $('#' + response.id).click(function () { return 0 }) // desactive le clic sur la piece
+  } else { // l'adversaire a joué
+    color = 'purple'
+  }
+  board.color(response.cells, color) // coloration sur le board
   pieces[response.id].toGray() // la piece devient grisée dans le bac a pieces
 })
