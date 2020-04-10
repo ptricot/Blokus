@@ -212,12 +212,16 @@ io.on('connection', function (socket) {
   socket.on('accepte defi', function (user1) {
     // users 1 and 2 join room
     const roomName = 'room-' + ++nRooms
+    const board = Array(14).fill(0)
+    for (var i = 0; i < 14; i++) {
+      board[i] = Array(14).fill(0)
+    }
     const room = {
       name: roomName,
       user1: user1,
       user2: socket.username,
       playerPlaying: 1, // 1:joueur1 2:joueur2
-      board: Array(14).fill(Array(14).fill(0)) // 0:vide 1:joueur1 2:joueur2
+      board: board // 0:vide 1:joueur1 2:joueur2
     }
     rooms[roomName] = room
     findSocket(user1).emit('new game', JSON.stringify(room))
@@ -246,51 +250,55 @@ io.on('connection', function (socket) {
   function verify (data) { // verifie si la piece definie par cells du joueur numero peut rentrer dans le board (return boolean)
     var cells = data.cells
     var numero = data.numero
-    console.log(typeof numero)
-    var cornerTouch = false
     var board = rooms[data.room].board
     if (numero !== rooms[data.room].playerPlaying) {
       console.log('Mauvais joueur')
       return false
-    }
-    for (var k in cells) {
-      var cell = cells[k]
-      if (cell.x >= 14 || cell.x < 0 || cell.y >= 14 || cell.y < 0) {
-        console.log('Sortie de board')
-        return false
-      } // pas de sortie du board
-      if (board[cell.x][cell.y] !== 0) {
-        console.log('Superposition')
-        return false
-      } // pas de superposition
-      if ((numero === 1 && cell.x === 4 && cell.y === 4) || (numero === 2 && cell.x === 9 && cell.y === 9)) {
-        console.log('premier coup')
-        return true
-      } // premier coup joué
-      for (var i = 0; i < 14; i++) {
-        for (var j = 0; j < 14; j++) {
-        // verifie les coins adjacents
-          console.log(i, j, cell.x, cell.y, board[i][j])
-          if (board[i][j] === numero && Math.abs(i - cell.x) === 1 && Math.abs(j - cell.y) === 1) {
-            cornerTouch = true
-            console.log('Corner touch')
-          }
-          // verifie qu'il n'y ai pas de cotés adjacents
-          if (board[i][j] === numero && ((Math.abs(i - cell.x) === 1 && Math.abs(j - cell.y) === 0) || (Math.abs(i - cell.x) === 0 && Math.abs(j - cell.y) === 1))) {
-            console.log('Faces adjacentes')
-            return false
+    } else {
+      var cornerTouch = false
+      for (var k in cells) {
+        var cell = cells[k]
+        if (cell.x >= 14 || cell.x < 0 || cell.y >= 14 || cell.y < 0) {
+          console.log('Sortie de board')
+          return false
+        // pas de sortie du board
+        } else if (board[cell.x][cell.y] !== 0) {
+          console.log('Superposition')
+          return false
+        // pas de superposition
+        } else if ((numero === 1 && cell.x === 4 && cell.y === 4) || (numero === 2 && cell.x === 9 && cell.y === 9)) {
+          console.log('premier coup')
+          return true
+        } else { // premier coup joué
+          for (var i = 0; i < 14; i++) {
+            for (var j = 0; j < 14; j++) {
+            // verifie les coins adjacents
+              if (board[i][j] === numero && Math.abs(i - cell.x) === 1 && Math.abs(j - cell.y) === 1) {
+                cornerTouch = true
+                console.log('Corner touch')
+              }
+              // verifie qu'il n'y ai pas de cotés adjacents
+              if (board[i][j] === numero && ((Math.abs(i - cell.x) === 1 && Math.abs(j - cell.y) === 0) || (Math.abs(i - cell.x) === 0 && Math.abs(j - cell.y) === 1))) {
+                console.log('Faces adjacentes')
+                return false
+              }
+            }
           }
         }
       }
+      return cornerTouch
     }
-    return cornerTouch
   }
 
   // play turn in a room
   socket.on('play turn', function (data) {
-    console.log(data);
     data = JSON.parse(data)
     if (verify(data)) {
+      var board = rooms[data.room].board
+      for (var i in data.cells) {
+        var cell = data.cells[i]
+        board[cell.x][cell.y] = data.numero
+      }
       rooms[data.room].playerPlaying = 1 + (rooms[data.room].playerPlaying % 2)
       io.in(data.room).emit('turn played', JSON.stringify(data))
     }
