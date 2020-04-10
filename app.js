@@ -227,6 +227,7 @@ io.on('connection', function (socket) {
     var cornerTouch = false
     for (var k in cells) {
       var cell = cells[k]
+      if ((nplayer===1 & cell.x===4 & cell.y===4)||(nplayer===2 & cell.x===9 & cell.y===9)) {return True}
       if (cell.x >= 14 || cell.x < 0 || cell.y >= 14 || cell.y < 0) { return false } // pas de sortie du board
       if (board[cell.x][cell.y] !== 0) { return false } // pas de superposition
       for (var i = 0; i < 14; i++) {
