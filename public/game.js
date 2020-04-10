@@ -314,7 +314,7 @@ $(function () {
   })
 
   $('#giveup').click(function () {
-    socket.emit('give up', JSON.stringify({ numero: cookies.numero }))
+    socket.emit('give up', JSON.stringify(cookies))
   })
 
   socket.on('fin de jeu', function (data) {

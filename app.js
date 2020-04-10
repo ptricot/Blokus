@@ -204,7 +204,6 @@ io.on('connection', function (socket) {
       console.log(`${socket.username} left lobby`)
       io.emit('users', JSON.stringify(getUsernames()))
     }
-    console.log(`${socket.username} disconnected`)
   })
 
   // message
@@ -321,11 +320,9 @@ io.on('connection', function (socket) {
 
   // Fin de jeu
   socket.on('give up', function (data) {
-    data = JSON.parse(data)
-    // DELETE LA ROOM
-    delete rooms[data.room]
-    var response = JSON.stringify(data)
-    socket.emit('fin de jeu', response)
+    var params = JSON.parse(data)
+    io.in(params.room).emit('fin de jeu', data)
+    delete rooms[params.room]
   })
 })
 
