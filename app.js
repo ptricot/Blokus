@@ -283,6 +283,7 @@ io.on('connection', function (socket) {
 
   // play turn in a room
   socket.on('play turn', function (data) {
+    console.log(data);
     data = JSON.parse(data)
     if (verify(data)) {
       rooms[data.room].playerPlaying = 1 + (rooms[data.room].playerPlaying % 2)
