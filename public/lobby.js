@@ -12,6 +12,7 @@ $(function () {
 
   // users update
   socket.on('users', function (users) {
+    users = JSON.parse(users)
     // remove self
     users.splice(users.indexOf(username), 1)
     $('#nUsers').html(users.length)
@@ -59,6 +60,7 @@ $(function () {
 
   // entrer dans une room
   socket.on('new game', function (room) {
+    room = JSON.parse(room)
     const name = room.name
     const user1 = room.user1
     const user2 = room.user2
