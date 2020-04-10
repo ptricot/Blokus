@@ -245,27 +245,27 @@ http.listen(PORT, function () {
   console.log(`\nServer started, listening on PORT ${PORT}`)
 })
 
-//--------------------
-//---Game handling----
-//--------------------
+// --------------------
+// ---Game handling----
+// --------------------
 
-var board = Array(9).fill(Array(9).fill(0)); // 0:vide 1:joueur1 2:joueur2
-var aQuiDeJouer = 1; // Le joueur 1 joue en premier
+var board = Array(9).fill(Array(9).fill(0)) // 0:vide 1:joueur1 2:joueur2
+var aQuiDeJouer = 1 // Le joueur 1 joue en premier
 
-function verify(cells,nplayer) { // verifie si la piece definie par cells du joueur nplayer peut rentrer dans le board (return boolean)
-  var cornerTouch = False;
-  for (var k in cells){
-    var cell = cells[k];
-    if (cell.x>=14 || cell.x<0 || cell.y>=14 || cell.y<0) {return False} // pas de sortie du board
-    if (board[cell.x][cell.y] != 0) {return False} // pas de superposition
-    for (var i=0; i<14; i++) {
-      for (var j=0; j<14; j++) {
+function verify (cells, nplayer) { // verifie si la piece definie par cells du joueur nplayer peut rentrer dans le board (return boolean)
+  var cornerTouch = false
+  for (var k in cells) {
+    var cell = cells[k]
+    if (cell.x >= 14 || cell.x < 0 || cell.y >= 14 || cell.y < 0) { return false } // pas de sortie du board
+    if (board[cell.x][cell.y] !== 0) { return false } // pas de superposition
+    for (var i = 0; i < 14; i++) {
+      for (var j = 0; j < 14; j++) {
         // verifie les coins adjacents
-        if (board[i][j]==nplayer & Math.abs(i-cell[x])==1 & Math.abs(j-cell[y])==1){cornerTouch = True}
+        if (board[i][j] === nplayer & Math.abs(i - cell.x) === 1 & Math.abs(j - cell.y) === 1) { cornerTouch = true }
         // verifie qu'il n'y ai pas de cotés adjacents
-        if (board[i][j]==nplayer & ((Math.abs(i-cell[x])==1 & Math.abs(j-cell[y])==0) || (Math.abs(i-cell[x])==0 & Math.abs(j-cell[y])==1))) {return False}
+        if (board[i][j] === nplayer & ((Math.abs(i - cell.x) === 1 & Math.abs(j - cell.y) === 0) || (Math.abs(i - cell.x) === 0 & Math.abs(j - cell.y) === 1))) { return false }
       }
     }
   }
-  return cornerTouch;
+  return cornerTouch
 }
