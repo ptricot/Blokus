@@ -311,4 +311,20 @@ $(function () {
     }
     board.color(data.cells, color) // coloration sur le board
   })
+
+  $('#giveup').click(function(){
+    socket.emit('give up', JSON.stringify({numero:cookies.numero}))
+  })
+
+  socket.on('fin de jeu',function (data) {
+    data=JSON.parse(data)
+    if (data.numero===cookies.numero) {
+      alert(`Dommage, vous avez perdu !`)
+      window.location = '/'
+    }
+    else {
+      alert(`Bravo, vous avez gagné !`)
+      window.location = '/'
+    }
+  })
 })
