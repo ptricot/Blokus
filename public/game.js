@@ -327,4 +327,15 @@ $(function () {
       window.location = '/'
     }
   })
+
+  socket.on('turn pass',function (data) {
+    data=JSON.parse(data)
+    if (data.numero===cookies.numero){
+      $('#giveup').unbind('click')
+      $('#info').text("L'adversaire est en train de jouer.")
+    }
+    else {
+      $('#info').text('L\'adversaire ne peut plus jouer, c\'est à vous de jouer.')
+    }
+  })
 })
