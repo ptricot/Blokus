@@ -12,15 +12,13 @@ const mysql = require('mysql')
 
 // MySQL
 /* // LOCAL
-const database = mysql.createConnection({
+var dbConfig = {
   host: 'localhost',
   user: 'blokus',
   password: '',
   database: 'blokus'
-})
-database.connect(function () {
-  console.log('Connected to Blokus database')
-}) */
+}
+ */
 
 var dbConfig = {
   host: 'eu-cdbr-west-02.cleardb.net',
