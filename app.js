@@ -247,6 +247,9 @@ io.on('connection', function (socket) {
     var numero = data.numero
     var cornerTouch = false
     var board = rooms[data.room].board
+    if (numero !== rooms[data.room].playerPlaying) {
+      return false
+    }
     for (var k in cells) {
       var cell = cells[k]
       if (cell.x >= 14 || cell.x < 0 || cell.y >= 14 || cell.y < 0) { return false } // pas de sortie du board
@@ -266,6 +269,7 @@ io.on('connection', function (socket) {
   // play turn in a room
   socket.on('play turn', function (data) {
     if (verify(data)) {
+      rooms[data.room].playerPlaying = 1 + (rooms[data.room].playerPlaying % 2)
       io.in(data.room).emit('turn played', data)
     }
   })
