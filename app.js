@@ -226,9 +226,9 @@ io.on('connection', function (socket) {
   })
 
   // message
-  socket.on('nouveau message', function (msg) {
-    io.emit('reponse', msg) // emit : to all - sender included
-    console.log('message: ' + msg)
+  socket.on('nouveau message', function (data) {
+    io.emit('reponse', data) // emit : to all - sender included
+    console.log('message: ' + JSON.stringify(data))
   })
 
   // user 1 send match request to user 2

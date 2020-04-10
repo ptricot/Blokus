@@ -98,12 +98,17 @@ $(function () {
   // send message
   $('#chat').submit(function (e) {
     e.preventDefault()
-    socket.emit('nouveau message', $('#msg').val())
+    socket.emit('nouveau message', JSON.stringify({
+      message: $('#msg').val(),
+      username: username
+    }))
     $('#msg').val('')
   })
 
   // receive message
-  socket.on('reponse', function (msg) {
-    $('#messages').append($('<li>').text(username + ' : ' + msg))
+  socket.on('reponse', function (data) {
+    data = JSON.parse(data)
+
+    $('#messages').append($('<li>').text(data.username + ' : ' + data.msg))
   })
 })
