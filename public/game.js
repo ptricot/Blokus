@@ -138,7 +138,7 @@ $(function () {
         $('#damier').children().eq(9).children().eq(9).removeClass('cell')
         $('#damier').children().eq(4).children().eq(4).addClass('border-or')
         $('#damier').children().eq(9).children().eq(9).addClass('border-pur')
-        $('#info').text("A vous de jouer.\n Selectionez une piece, tournez la\n et placez la sur le plateau.")
+        $('#info').text('A vous de jouer.\n Sélectionnez une pièce, tournez-la\n et placez-la sur le plateau.')
       }
       if (cookies.numero === 2) {
         $('#damier').children().eq(4).children().eq(4).removeClass('cell')
@@ -307,7 +307,7 @@ $(function () {
       color = 'purple'
       piecesPurp[data.id].toGray() // la piece devient grisée dans le bac a pieces
       console.log("l'adversaire a joué")
-      $('#info').text("A vous de jouer.\n Selectionez une piece, tournez la\n et placez la sur le plateau.")
+      $('#info').text('A vous de jouer.\n Sélectionnez une pièce, tournez-la\n et placez-la sur le plateau.')
     }
     board.color(data.cells, color) // coloration sur le board
   })
