@@ -6,6 +6,11 @@
 $(function () {
   const socket = io()
 
+  // reset previous game cookies
+  document.cookie = 'room=-1 ; expires = Thu, 01 Jan 1970 00:00:00 GMT'
+  document.cookie = 'adversaire=-1 ; expires = Thu, 01 Jan 1970 00:00:00 GMT'
+  document.cookie = 'numero=-1 ; expires = Thu, 01 Jan 1970 00:00:00 GMT'
+
   // Read cookies : user=username; adversaire=username2; room=room-name; numero=joueur
   const cookies = {}
   const text = document.cookie.split('; ')
@@ -22,6 +27,7 @@ $(function () {
   // users update
   socket.on('users', function (users) {
     users = JSON.parse(users)
+    console.log(users)
     // remove self
     users.splice(users.indexOf(username), 1)
     $('#nUsers').html(users.length)
