@@ -20,6 +20,7 @@ $(function () {
   socket.emit('new user', username)
 
   // users update
+  $('#username').text('Connecté en tant que : '+username)
   socket.on('users', function (users) {
     users = JSON.parse(users)
     // remove self
@@ -32,13 +33,16 @@ $(function () {
       var user = users[i]
       var li = document.createElement('li')
       var text = document.createTextNode(user)
+      var div = document.createElement('div')
       var button = document.createElement('button')
 
       button.innerHTML = 'Play with'
       button.classList.add('but')
+      div.classList.add('player-name')
       button.id = user
 
-      li.append(text)
+      div.append(text)
+      li.append(div)
       li.append(button)
 
       lusers.append(li)
@@ -94,6 +98,6 @@ $(function () {
 
   // receive message
   socket.on('reponse', function (msg) {
-    $('#messages').append($('<li>').text(msg))
+    $('#messages').append($('<li>').text(username+' : '+msg))
   })
 })
