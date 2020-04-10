@@ -284,6 +284,7 @@ socket.on('end turn', function (msg) { // Le serveur renvoie une confirmation (a
   dam.color(response.cells, 'orange') // coloration sur le board
   pieces[response.id].toGray() // la piece devient grisée dans le bac a pieces
   $('#' + response.id).click(function ($) { return 0 }) // desactive le clic sur la piece
+  $('.cell-select').removeClass('cell-select')
 })
 socket.on('turn played', function (msg) { // Le serveur envoie ce qu'a joue l'adversaire (avec les cases a colorer)
   var response = msg.parse()
