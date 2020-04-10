@@ -257,7 +257,9 @@ io.on('connection', function (socket) {
       user1: user1,
       user2: socket.username,
       playerPlaying: 1, // 1:joueur1 2:joueur2
-      board: board // 0:vide 1:joueur1 2:joueur2
+      board: board, // 0:vide 1:joueur1 2:joueur2
+      giveUp1: false,
+      giveUp2: false
     }
     rooms[roomName] = room
     findSocket(user1).emit('new game', JSON.stringify(room))
@@ -332,7 +334,13 @@ io.on('connection', function (socket) {
         var cell = data.cells[i]
         board[cell.x][cell.y] = data.numero
       }
-      rooms[data.room].playerPlaying = 1 + (rooms[data.room].playerPlaying % 2)
+      if (data.room.giveUp1) {
+        rooms[data.room].playerPlaying = 2
+      } else if (data.room.giveUp2) {
+        rooms[data.room].playerPlaying = 1
+      } else {
+        rooms[data.room].playerPlaying = 1 + (rooms[data.room].playerPlaying % 2)
+      }
       io.in(data.room).emit('turn played', JSON.stringify(data))
     }
   })
