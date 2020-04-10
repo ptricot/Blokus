@@ -273,7 +273,7 @@ $(function () {
   // Placement sur le board
   $('.cell, .border-or, .border-pur').click(function () {
     var x = $(this).data('x'); var y = $(this).data('y') // la case cliquee
-    if ($('.clicked').length > 0 & x + $('.clicked').eq(0).data('xmax') < 14 & y + $('.clicked').eq(0).data('ymax') < 14) {
+    if ($('.clicked').length > 0) {
       // Coloration des cases sur le board et remplissage du cache
       var cells = pieces[$('.clicked').eq(0).attr('id')].cells // Les cases a colorer
       $('.cell-select').removeClass('cell-select') // On retire un eventuel autre placement
