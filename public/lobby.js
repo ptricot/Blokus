@@ -62,12 +62,15 @@ $(function () {
     const name = room.name
     const user1 = room.user1
     const user2 = room.user2
-    let adversaire = user1
+    let adversaire = user2
+    let numero = 1
     if (adversaire === username) {
-      adversaire = user2
+      adversaire = user1
+      numero = 2
     }
     document.cookie = 'room=' + name
     document.cookie = 'adversaire=' + adversaire
+    document.cookie = 'numero=' + numero
     window.location = 'game.html'
   })
 

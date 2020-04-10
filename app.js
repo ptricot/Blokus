@@ -18,7 +18,6 @@ const database = mysql.createConnection({
   database: 'blokus'
 })
 database.connect(function (err) {
-  if (err) throw err
   console.log('Connected to Blokus database')
 })
 
